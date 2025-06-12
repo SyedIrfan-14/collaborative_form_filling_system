@@ -46,16 +46,15 @@
 // module.exports = db;
 
 
+
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 
 let pool;
 
 if (process.env.MYSQL_URL && process.env.MYSQL_URL !== '') {
-  // Railway production connection
   pool = mysql.createPool(process.env.MYSQL_URL);
 } else {
-  // Local development connection
   pool = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
