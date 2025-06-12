@@ -49,27 +49,37 @@
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 
-const dbUrl = process.env.MYSQL_URL;
+let db;
 
-if (!dbUrl) {
-  throw new Error('MYSQL_URL is not set in environment variables');
+if (process.env.MYSQL_URL) {
+  // Railway-provided URL (preferred for production)
+  const dbUrl = new URL(process.env.MYSQL_URL);
+  db = mysql.createPool({
+    host: dbUrl.hostname,
+    user: dbUrl.username,
+    password: dbUrl.password,
+    database: dbUrl.pathname.slice(1),
+    port: dbUrl.port || 3306,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+  });
+} else {
+  // Local/custom fallback
+  db = mysql.createPool({
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASS || '',
+    database: process.env.DB_NAME || 'test',
+    port: process.env.DB_PORT || 3306,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+  });
 }
 
-const parsed = new URL(dbUrl);
-
-const db = mysql.createPool({
-  host: parsed.hostname,
-  user: parsed.username,
-  password: parsed.password,
-  database: parsed.pathname.slice(1),
-  port: parsed.port || 3306,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
-});
-
 db.getConnection()
-  .then(() => console.log('✅ MySQL connected using MYSQL_URL'))
+  .then(() => console.log('✅ MySQL connected'))
   .catch((err) => console.error('❌ MySQL connection failed:', err.message));
 
 module.exports = db;
