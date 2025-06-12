@@ -11,6 +11,14 @@ if (process.env.MYSQL_URL) {
     password: dbUrl.password,
     database: dbUrl.pathname.replace('/', ''),
     port: dbUrl.port || 3306,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
+    ssl: {
+      rejectUnauthorized: false
+    },
+    // Force IPv4
+    family: 4
   });
 } else {
   db = mysql.createPool({
@@ -19,10 +27,11 @@ if (process.env.MYSQL_URL) {
     password: process.env.DB_PASS,
     database: process.env.DB_NAME,
     port: process.env.DB_PORT || 3306,
+    family: 4
   });
 }
 
-// Optional: Confirm connection on startup
+// Optional: Test connection
 (async () => {
   try {
     const conn = await db.getConnection();
