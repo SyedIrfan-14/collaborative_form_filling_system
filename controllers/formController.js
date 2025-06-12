@@ -1,4 +1,4 @@
-const db = require('../connections/db');
+const db = require('../db/connection');
 
 const renderCreateForm = async (req, res) => {
   try {
