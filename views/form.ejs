@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= form.name %></title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <h2><%= form.name %></h2>
+  <form>
+    <% fields.forEach(field => { %>
+      <div>
+        <label><%= field.field_name %>:</label>
+        <% if (field.field_type === 'dropdown') { %>
+          <select data-id="<%= field.id %>">
+            <% field.field_options.split(',').forEach(opt => { %>
+              <option value="<%= opt.trim() %>" <%= (opt.trim() === field.value) ? 'selected' : '' %>><%= opt.trim() %></option>
+            <% }) %>
+          </select>
+        <% } else { %>
+          <input type="<%= field.field_type === 'number' ? 'number' : 'text' %>" data-id="<%= field.id %>" value="<%= field.value || '' %>" />
+        <% } %>
+      </div>
+    <% }) %>
+  </form>
+  <script>
+    const socket = io();
+    document.querySelectorAll('[data-id]').forEach(el => {
+      el.addEventListener('input', () => {
+        const id = el.getAttribute('data-id');
+        const value = el.value;
+        socket.emit('field-update', { id, value });
+      });
+    });
+    socket.on('update-field', ({ id, value }) => {
+      const input = document.querySelector(\`[data-id='\${id}']\`);
+      if (input && input.value !== value) input.value = value;
+    });
+  </script>
+</body>
+</html>
