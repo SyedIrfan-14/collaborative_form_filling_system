@@ -6,14 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-  <h2>Create a Form</h2>
-  <form id="formCreate">
-    <input name="formName" placeholder="Form Name" required />
-    <div id="fields"></div>
-    <button type="button" onclick="addField()">Add Field</button>
-    <button type="submit">Create Form</button>
-  </form>
-  <div id="result"></div>
+  <div class="container">
+    <h2>Create a Form</h2>
+    <form id="formCreate">
+      <input name="formName" placeholder="Form Name" required class="form-control" />
+      <div id="fields"></div>
+      <button type="button" onclick="addField()">➕ Add Field</button>
+      <button type="submit">✅ Create Form</button>
+    </form>
+    <div id="result"></div>
+  </div>
 
   <script>
     let fieldCount = 0;
@@ -21,14 +23,14 @@
     function addField() {
       const container = document.getElementById('fields');
       const fieldHTML = `
-        <div>
-          <input name="fields[${fieldCount}][name]" placeholder="Field Name" required />
-          <select name="fields[${fieldCount}][type]" onchange="toggleOptions(this, ${fieldCount})">
+        <div class="form-group" style="margin-top: 10px;">
+          <input name="fields[${fieldCount}][name]" placeholder="Field Name" required class="form-control" />
+          <select name="fields[${fieldCount}][type]" onchange="toggleOptions(this, ${fieldCount})" class="form-control">
             <option value="text">Text</option>
             <option value="number">Number</option>
             <option value="dropdown">Dropdown</option>
           </select>
-          <input name="fields[${fieldCount}][options]" placeholder="Options (comma separated)" style="display:none" />
+          <input name="fields[${fieldCount}][options]" placeholder="Options (comma separated)" class="form-control" style="display:none" />
         </div>`;
       container.insertAdjacentHTML('beforeend', fieldHTML);
       fieldCount++;
@@ -36,7 +38,13 @@
 
     function toggleOptions(select, index) {
       const input = select.parentElement.querySelector(`input[name="fields[${index}][options]"]`);
-      input.style.display = (select.value === "dropdown") ? "block" : "none";
+      if (select.value === "dropdown") {
+        input.style.display = "block";
+        input.required = true;
+      } else {
+        input.style.display = "none";
+        input.required = false;
+      }
     }
 
     document.getElementById("formCreate").addEventListener("submit", async (e) => {
