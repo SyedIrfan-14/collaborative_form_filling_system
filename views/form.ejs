@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title><%= form.name %></title>
   <link rel="stylesheet" href="/css/style.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,8 +17,11 @@
 
           <% if (field.field_type === 'dropdown') { %>
             <select name="field_<%= field.id %>" data-id="<%= field.id %>" class="form-control">
-              <% field.field_options.split(',').forEach(opt => { %>
-                <option value="<%= opt.trim() %>"><%= opt.trim() %></option>
+              <option disabled <%= !field.value ? 'selected' : '' %>>-- Select --</option>
+              <% field.field_options.split(',').forEach(opt => {
+                   const trimmed = opt.trim();
+              %>
+                <option value="<%= trimmed %>" <%= trimmed === field.value ? 'selected' : '' %>><%= trimmed %></option>
               <% }) %>
             </select>
 
@@ -28,6 +32,7 @@
               data-id="<%= field.id %>"
               class="form-control"
               placeholder="Enter <%= field.field_name %>"
+              value="<%= field.value || '' %>"
             />
           <% } %>
         </div>
