@@ -49,38 +49,28 @@
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 
-let db;
+let pool;
 
-if (process.env.MYSQL_URL) {
-  // Railway-provided URL (preferred for production)
-  const dbUrl = new URL(process.env.MYSQL_URL);
-  db = mysql.createPool({
-    host: dbUrl.hostname,
-    user: dbUrl.username,
-    password: dbUrl.password,
-    database: dbUrl.pathname.slice(1),
-    port: dbUrl.port || 3306,
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-  });
+if (process.env.MYSQL_URL && process.env.MYSQL_URL !== '') {
+  // Railway production connection
+  pool = mysql.createPool(process.env.MYSQL_URL);
 } else {
-  // Local/custom fallback
-  db = mysql.createPool({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASS || '',
-    database: process.env.DB_NAME || 'test',
+  // Local development connection
+  pool = mysql.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME,
     port: process.env.DB_PORT || 3306,
     waitForConnections: true,
     connectionLimit: 10,
-    queueLimit: 0
+    queueLimit: 0,
   });
 }
 
-db.getConnection()
-  .then(() => console.log('✅ MySQL connected'))
+pool.getConnection()
+  .then(() => console.log('✅ MySQL connected successfully'))
   .catch((err) => console.error('❌ MySQL connection failed:', err.message));
 
-module.exports = db;
+module.exports = pool;
 
