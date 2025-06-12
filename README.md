@@ -1,10 +1,13 @@
 # Collaborative Form Filling System
 
-This is a collaborative web-based form filling system that allows multiple users to contribute data to shared forms in real-time. Designed with modularity in mind, it uses the MVC architecture and is built on Node.js and Express.
+This is a collaborative web-based form filling system that allows multiple users to contribute data to shared forms in real-time. It is designed with modularity and scalability in mind, using the MVC architecture and built on Node.js and Express. To enable real-time collaboration efficiently, the app uses **WebSockets** instead of traditional polling methods.
+
+WebSockets provide a persistent, full-duplex communication channel between the server and the client, allowing instant data synchronization between users. This avoids the overhead and delay associated with periodic polling and ensures a seamless collaborative experience.
 
 ## 🚀 Features
 
-- Real-time collaborative form editing
+- Real-time collaborative form editing using **WebSockets**
+- Instant updates across all connected users without the need for page refresh or polling
 - User-friendly interface using server-side rendering
 - RESTful API integration for backend operations
 - MongoDB database connection for persistent storage
@@ -13,10 +16,12 @@ This is a collaborative web-based form filling system that allows multiple users
 ## 🛠️ Technologies Used
 
 - **Node.js** with **Express.js**
-- **MongoDB** (via Mongoose)
-- **EJS** templating engine (assumed from views directory)
+- **Mysql2 (Mysql Workbench 8.0)
+- **EJS** templating engine (for server-rendered views)
 - **HTML/CSS/JS** for frontend
+- **WebSockets** (via `socket.io`) for real-time communication
 - **Railway** for deployment
+
 
 ## 📁 Project Structure
 
@@ -78,7 +83,25 @@ You can try the live version of this project here:
 This project is deployed on [Railway](https://railway.app/). To deploy your own version:
 
 1. Push the project to GitHub.
+   
+```bash
+git init                      # Initialize a new Git repository
+git add .                    # Stage all files
+git status                   # (Optional) Check which files are staged
+git commit -m "Initial commit"   # Commit the changes
+git branch -M main               # Rename the branch to main (optional but common)
+git remote add origin https://github.com/your-username/your-repo-name.git
+git push -u origin main         # Push to GitHub
+```
 2. Import the repository into Railway.
+
+```Integrate Github With Railway Hosting
+1.Click on Deploy a new project
+2.Then click on deploy from github repo
+3.It will List all your repositories select the repo where the project is present
+4.Then It wil start extracting the files
+```
+
 3. Set up the required environment variables from `.env`.
 4. Deploy and start the service.
 
