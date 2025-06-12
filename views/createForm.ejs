@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,31 +16,33 @@
 
   <script>
     let fieldCount = 0;
+
     function addField() {
       const container = document.getElementById('fields');
-      const fieldHTML = \`
+      const fieldHTML = `
         <div>
-          <input name="fields[\${fieldCount}][name]" placeholder="Field Name" required />
-          <select name="fields[\${fieldCount}][type]" onchange="toggleOptions(this, \${fieldCount})">
+          <input name="fields[${fieldCount}][name]" placeholder="Field Name" required />
+          <select name="fields[${fieldCount}][type]" onchange="toggleOptions(this, ${fieldCount})">
             <option value="text">Text</option>
             <option value="number">Number</option>
             <option value="dropdown">Dropdown</option>
           </select>
-          <input name="fields[\${fieldCount}][options]" placeholder="Options (comma separated)" style="display:none" />
-        </div>\`;
+          <input name="fields[${fieldCount}][options]" placeholder="Options (comma separated)" style="display:none" />
+        </div>`;
       container.insertAdjacentHTML('beforeend', fieldHTML);
       fieldCount++;
     }
 
     function toggleOptions(select, index) {
-      const input = select.parentElement.querySelector(\`input[name="fields[\${index}][options]"]\`);
-      input.style.display = (select.value === "dropdown") ? "inline" : "none";
+      const input = select.parentElement.querySelector(`input[name="fields[${index}][options]"]`);
+      input.style.display = (select.value === "dropdown") ? "block" : "none";
     }
 
     document.getElementById("formCreate").addEventListener("submit", async (e) => {
       e.preventDefault();
       const form = new FormData(e.target);
       const fields = [];
+
       for (let [key, value] of form.entries()) {
         if (key.startsWith("fields[")) {
           const [, index, prop] = key.match(/fields\[(\d+)\]\[(\w+)\]/);
@@ -49,13 +50,25 @@
           fields[index][prop] = value;
         }
       }
+
       const response = await fetch("/admin/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ formName: form.get("formName"), fields })
+        body: JSON.stringify({
+          formName: form.get("formName"),
+          fields
+        })
       });
+
       const data = await response.json();
-      document.getElementById("result").innerHTML = \`<a href="\${data.link}">Open Form</a>\`;
+
+      if (data.success) {
+        document.getElementById("result").innerHTML =
+          `<a href="${data.link}" target="_blank">🔗 Open Form</a>`;
+      } else {
+        document.getElementById("result").innerHTML =
+          `<span style="color:red;">❌ ${data.message}</span>`;
+      }
     });
   </script>
 </body>
