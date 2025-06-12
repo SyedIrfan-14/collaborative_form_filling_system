@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,25 +6,37 @@
   <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
-  <h2><%= form.name %></h2>
-  <form>
-    <% fields.forEach(field => { %>
-      <div>
-        <label><%= field.field_name %>:</label>
-        <% if (field.field_type === 'dropdown') { %>
-          <select data-id="<%= field.id %>">
-            <% field.field_options.split(',').forEach(opt => { %>
-              <option value="<%= opt.trim() %>" <%= (opt.trim() === field.value) ? 'selected' : '' %>><%= opt.trim() %></option>
-            <% }) %>
-          </select>
-        <% } else { %>
-          <input type="<%= field.field_type === 'number' ? 'number' : 'text' %>" data-id="<%= field.id %>" value="<%= field.value || '' %>" />
-        <% } %>
-      </div>
-    <% }) %>
-  </form>
+  <div class="container">
+    <h2><%= form.name %></h2>
+    <form id="collabForm">
+      <% fields.forEach(field => { %>
+        <div class="form-group">
+          <label><%= field.field_name %>:</label>
+
+          <% if (field.field_type === 'dropdown') { %>
+            <select name="field_<%= field.id %>" data-id="<%= field.id %>" class="form-control">
+              <% field.field_options.split(',').forEach(opt => { %>
+                <option value="<%= opt.trim() %>"><%= opt.trim() %></option>
+              <% }) %>
+            </select>
+
+          <% } else { %>
+            <input
+              name="field_<%= field.id %>"
+              type="<%= field.field_type === 'number' ? 'number' : 'text' %>"
+              data-id="<%= field.id %>"
+              class="form-control"
+              placeholder="Enter <%= field.field_name %>"
+            />
+          <% } %>
+        </div>
+      <% }) %>
+    </form>
+  </div>
+
   <script>
     const socket = io();
+
     document.querySelectorAll('[data-id]').forEach(el => {
       el.addEventListener('input', () => {
         const id = el.getAttribute('data-id');
@@ -33,9 +44,12 @@
         socket.emit('field-update', { id, value });
       });
     });
+
     socket.on('update-field', ({ id, value }) => {
-      const input = document.querySelector(\`[data-id='\${id}']\`);
-      if (input && input.value !== value) input.value = value;
+      const input = document.querySelector(`[data-id='${id}']`);
+      if (input && input.value !== value) {
+        input.value = value;
+      }
     });
   </script>
 </body>
