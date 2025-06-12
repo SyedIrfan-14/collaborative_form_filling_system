@@ -1,14 +1,16 @@
 const db = require('../db/connection');
 
+// Render the Create Form page
 const renderCreateForm = async (req, res) => {
   try {
-    res.render('createForm');
+    res.render('createForm', { formLink: null }); // add default formLink
   } catch (error) {
     console.error('Error rendering create form:', error);
     res.status(500).json({ success: false, message: 'Error rendering form' });
   }
 };
 
+// Create a new form
 const createForm = async (req, res) => {
   try {
     const { formName, fields } = req.body;
@@ -20,9 +22,11 @@ const createForm = async (req, res) => {
       });
     }
 
+    // Insert form name
     const [formResult] = await db.query('INSERT INTO forms (name) VALUES (?)', [formName]);
     const formId = formResult.insertId;
 
+    // Insert each field
     for (const field of fields) {
       await db.query(
         'INSERT INTO fields (form_id, name, type, options) VALUES (?, ?, ?, ?)',
@@ -30,10 +34,9 @@ const createForm = async (req, res) => {
       );
     }
 
-    res.status(201).json({
-      success: true,
-      message: 'Form created successfully',
-      link: `/form/${formId}`,
+    // After successful creation, render the same page with the shareable link
+    res.render('createForm', {
+      formLink: `/form/${formId}`,
     });
   } catch (error) {
     console.error('Error creating form:', error);
@@ -44,6 +47,7 @@ const createForm = async (req, res) => {
   }
 };
 
+// Render a specific form for filling
 const renderForm = async (req, res) => {
   try {
     const formId = req.params.id;
