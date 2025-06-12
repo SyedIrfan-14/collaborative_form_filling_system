@@ -1,42 +1,100 @@
-
+/* Base reset and font */
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f4f4f9;
-  padding: 30px;
-}
-
-h2 {
+  background: #f2f4f7;
+  margin: 0;
+  padding: 0;
   color: #333;
 }
 
-form {
-  background: white;
+/* Container center layout */
+.container {
+  max-width: 600px;
+  margin: 50px auto;
   padding: 20px;
-  border-radius: 10px;
-  max-width: 500px;
-  margin: auto;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
+/* Headings */
+h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #2c3e50;
+}
+
+/* Form styling */
+form {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* Group for each field */
 form div {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
-input, select, button {
+/* Labels */
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #444;
+}
+
+/* Inputs and selects */
+input, select {
   width: 100%;
-  padding: 10px;
-  border-radius: 5px;
+  padding: 12px 14px;
+  font-size: 1rem;
   border: 1px solid #ccc;
+  border-radius: 8px;
   box-sizing: border-box;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
+input:focus, select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  outline: none;
+}
+
+/* Buttons */
 button {
-  background-color: #007BFF;
-  color: white;
+  width: 100%;
+  padding: 12px;
   border: none;
+  border-radius: 8px;
+  background-color: #007bff;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
   cursor: pointer;
+  transition: background-color 0.25s, transform 0.2s;
 }
 
 button:hover {
   background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* Result link */
+#result {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 1.1rem;
+}
+
+#result a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+#result a:hover {
+  text-decoration: underline;
 }
