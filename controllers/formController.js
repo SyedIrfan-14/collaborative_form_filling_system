@@ -1,16 +1,21 @@
-const db = require('../db/connection');
+const {
+  createForm: createFormModel,
+  addField,
+  getForm,
+  getFormFields,
+} = require('../models/formModel');
 
-// Render the Create Form page
+// Render the "Create Form" page
 const renderCreateForm = async (req, res) => {
   try {
-    res.render('createForm', { formLink: null }); // add default formLink
+    res.render('createForm');
   } catch (error) {
     console.error('Error rendering create form:', error);
     res.status(500).json({ success: false, message: 'Error rendering form' });
   }
 };
 
-// Create a new form
+// Handle form creation (with fields)
 const createForm = async (req, res) => {
   try {
     const { formName, fields } = req.body;
@@ -22,21 +27,19 @@ const createForm = async (req, res) => {
       });
     }
 
-    // Insert form name
-    const [formResult] = await db.query('INSERT INTO forms (name) VALUES (?)', [formName]);
-    const formId = formResult.insertId;
+    // Create form
+    const formId = await createFormModel(formName);
 
-    // Insert each field
+    // Add all fields
     for (const field of fields) {
-      await db.query(
-        'INSERT INTO fields (form_id, name, type, options) VALUES (?, ?, ?, ?)',
-        [formId, field.name, field.type, field.options || '']
-      );
+      await addField(formId, field.name, field.type, field.options || '');
     }
 
-    // After successful creation, render the same page with the shareable link
-    res.render('createForm', {
-      formLink: `/form/${formId}`,
+    // Respond with success and form link
+    res.status(201).json({
+      success: true,
+      message: 'Form created successfully',
+      link: `/form/${formId}`,
     });
   } catch (error) {
     console.error('Error creating form:', error);
@@ -47,15 +50,15 @@ const createForm = async (req, res) => {
   }
 };
 
-// Render a specific form for filling
+// Render a specific form based on ID
 const renderForm = async (req, res) => {
   try {
     const formId = req.params.id;
 
-    const [formResult] = await db.query('SELECT * FROM forms WHERE id = ?', [formId]);
-    const [fieldsResult] = await db.query('SELECT * FROM fields WHERE form_id = ?', [formId]);
+    const form = await getForm(formId);
+    const fields = await getFormFields(formId);
 
-    if (formResult.length === 0) {
+    if (!form) {
       return res.status(404).json({
         success: false,
         message: 'Form not found',
@@ -63,8 +66,8 @@ const renderForm = async (req, res) => {
     }
 
     res.render('form', {
-      form: formResult[0],
-      fields: fieldsResult,
+      form,
+      fields,
     });
   } catch (error) {
     console.error('Error rendering form:', error);
@@ -75,4 +78,8 @@ const renderForm = async (req, res) => {
   }
 };
 
-module.exports = { renderCreateForm, createForm, renderForm };
+module.exports = {
+  renderCreateForm,
+  createForm,
+  renderForm,
+};
