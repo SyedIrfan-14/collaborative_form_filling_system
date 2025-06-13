@@ -36,10 +36,10 @@
 //   try {
 //     const conn = await db.getConnection();
 //     await conn.ping();
-//     console.log('✅ MySQL database connected successfully.');
+//     console.log(' MySQL database connected successfully.');
 //     conn.release();
 //   } catch (err) {
-//     console.error('❌ MySQL connection failed:', err.message);
+//     console.error(' MySQL connection failed:', err.message);
 //   }
 // })();
 
@@ -68,8 +68,8 @@ if (process.env.MYSQL_URL && process.env.MYSQL_URL !== '') {
 }
 
 pool.getConnection()
-  .then(() => console.log('✅ MySQL connected successfully'))
-  .catch((err) => console.error('❌ MySQL connection failed:', err.message));
+  .then(() => console.log(' MySQL connected successfully'))
+  .catch((err) => console.error(' MySQL connection failed:', err.message));
 
 module.exports = pool;
 
