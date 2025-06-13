@@ -107,7 +107,8 @@ git push -u origin main         # Push to GitHub
 
 
 
-*Key Features
+*Key Features:
+
 Real-Time Collaboration
 Multiple users can fill out the same form simultaneously, with live updates using WebSockets via socket.io.
 
@@ -131,7 +132,8 @@ Supports .env configuration for secrets and environment variables. Deployed on R
 
 
 
-*Edge Cases Handled
+*Edge Cases Handled:
+
 Simultaneous Edits Conflict Prevention
 Using WebSockets ensures the latest value is shared across all clients instantly, reducing chances of overwrite conflicts.
 
