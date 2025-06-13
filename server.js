@@ -21,24 +21,24 @@ app.use("/", formRoutes);
 
 // WebSocket
 io.on("connection", (socket) => {
-  console.log("🟢 A user connected");
+  console.log("A user connected");
 
   socket.on("field-update", async ({ id, value }) => {
     try {
       await db.query("UPDATE fields SET value = ? WHERE id = ?", [value, id]);
       socket.broadcast.emit("update-field", { id, value });
     } catch (error) {
-      console.error("❌ Error updating field via WebSocket:", error.message);
+      console.error("Error updating field via WebSocket:", error.message);
     }
   });
 
   socket.on("disconnect", () => {
-    console.log("🔴 A user disconnected");
+    console.log("A user disconnected");
   });
 });
 
 // Server listen
 const PORT = process.env.PORT || 8080;
 http.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });
