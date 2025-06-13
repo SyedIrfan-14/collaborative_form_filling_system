@@ -11,8 +11,8 @@
     <form id="formCreate">
       <input name="formName" placeholder="Form Name" required class="form-control" />
       <div id="fields"></div>
-      <button type="button" onclick="addField()">➕ Add Field</button>
-      <button type="submit">✅ Create Form</button>
+      <button type="button" onclick="addField()">Add Field</button>
+      <button type="submit">Create Form</button>
     </form>
     <div id="result"></div>
   </div>
@@ -76,7 +76,7 @@
           `<a href="${data.link}" target="_blank">🔗 Open Form</a>`;
       } else {
         document.getElementById("result").innerHTML =
-          `<span style="color:red;">❌ ${data.message}</span>`;
+          `<span style="color:red;"> ${data.message}</span>`;
       }
     });
   </script>
