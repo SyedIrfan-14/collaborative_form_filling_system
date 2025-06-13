@@ -105,6 +105,48 @@ git push -u origin main         # Push to GitHub
 3. Set up the required environment variables from `.env`.
 4. Deploy and start the service.
 
+
+
+*Key Features
+Real-Time Collaboration
+Multiple users can fill out the same form simultaneously, with live updates using WebSockets via socket.io.
+
+Instant Data Sync
+All connected users see real-time changes instantly, without needing to refresh or reload the page.
+
+Server-Side Rendering
+EJS-based views provide a fast, clean UI that integrates well with backend data.
+
+Modular MVC Architecture
+Ensures clean separation between logic, routes, and views for better maintainability and scalability.
+
+Database Integration
+Uses MySQL for structured, persistent form data storage.
+
+RESTful API Support
+Enables modular backend operations that can be extended easily in the future.
+
+Secure Deployment Ready
+Supports .env configuration for secrets and environment variables. Deployed on Railway for accessibility.
+
+
+
+*Edge Cases Handled
+Simultaneous Edits Conflict Prevention
+Using WebSockets ensures the latest value is shared across all clients instantly, reducing chances of overwrite conflicts.
+
+User Disconnection/Reconnection
+The app handles client reconnections gracefully by syncing the current form state from the server when a user returns.
+
+Empty or Invalid Form Inputs
+Basic validation is implemented to ensure required fields are filled before submission.
+
+Database Connection Failures
+Includes error handling for MySQL connection issues, with appropriate fallback or error messages.
+
+Environment Configuration Errors
+If .env variables are missing or incorrectly set, the system throws warnings or halts critical operations to prevent runtime failures.
+
 ## 📄 License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
