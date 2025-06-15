@@ -149,9 +149,6 @@ Includes error handling for MySQL connection issues, with appropriate fallback o
 Environment Configuration Errors
 If .env variables are missing or incorrectly set, the system throws warnings or halts critical operations to prevent runtime failures.
 
-## 📄 License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ---
 
